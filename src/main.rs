@@ -1,4 +1,6 @@
 use nannou::prelude::*;
+use nannou::rand::rngs::StdRng;
+use nannou::rand::{Rng, SeedableRng};
 
 const ROWS: u32 = 25;
 const COLUMNS: u32 = 15;
@@ -9,7 +11,9 @@ const WINDOW_WIDTH: u32 = COLUMNS * SQUARE_SIZE_PX + 2 * MARGIN_SIDES_PX;
 const WINDOW_HEIGHT: u32 = ROWS * SQUARE_SIZE_PX + 2 * MARGIN_TOP_BOTTOM_PX;
 const SQUARE_LINE_WIDTH_RATIO: f32 = 0.075; // In relation to square size
 
-struct Model {}
+struct Model {
+    random_seed: u64,
+}
 
 fn model(app: &App) -> Model {
     let _window = app
@@ -19,12 +23,14 @@ fn model(app: &App) -> Model {
         .view(view)
         .build()
         .unwrap();
-    Model {}
+
+    let random_seed = random_range(0, 100_000_000);
+    Model { random_seed }
 }
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {}
 
-fn view(app: &App, _model: &Model, frame: Frame) {
+fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw(); // standard Nannou coordinate system
     let grid_draw = draw
         .scale(SQUARE_SIZE_PX as f32) // custom grid coordinate system
@@ -33,12 +39,14 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 
     draw.background().color(SNOW);
 
+    let mut rng = StdRng::seed_from_u64(model.random_seed);
+
     for y in 0..ROWS {
         for x in 0..COLUMNS {
             let factor = y as f32 / ROWS as f32;
-            let x_offset = factor * random_range(-0.5, 0.5);
-            let y_offset = factor * random_range(-0.5, 0.5);
-            let rotation = factor * random_range(-PI / 4.0, PI / 4.0); // 45 degrees
+            let x_offset = factor * rng.gen_range(-0.5..0.5);
+            let y_offset = factor * rng.gen_range(-0.5..0.5);
+            let rotation = factor * rng.gen_range(-PI / 4.0..PI / 4.0); // 45 degrees
 
             let cell_draw = grid_draw.x_y(x as f32, y as f32);
             cell_draw
