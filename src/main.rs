@@ -1,6 +1,7 @@
 use nannou::prelude::*;
 use nannou::rand::rngs::StdRng;
 use nannou::rand::{Rng, SeedableRng};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 const ROWS: u32 = 25;
 const COLUMNS: u32 = 15;
@@ -67,12 +68,21 @@ fn view(app: &App, model: &Model, frame: Frame) {
     draw.to_frame(app, &frame).unwrap();
 }
 
-fn key_pressed(_app: &App, model: &mut Model, key: Key) {
+fn key_pressed(app: &App, model: &mut Model, key: Key) {
     match key {
         Key::R => {
             let new_seed = random_range(0, MAX_RNG_SEED_VAL);
             model.random_seed = new_seed;
             println!("R key pressed. Changing seed to: {new_seed}")
+        }
+        Key::S => {
+            let timestamp = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs();
+            let filename = format!("{}_{}.png", app.exe_name().unwrap(), timestamp);
+            println!("S key pressed. Saving screenshot as: {filename}");
+            app.main_window().capture_frame(filename);
         }
         _other_key => {}
     }
