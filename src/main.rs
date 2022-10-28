@@ -11,6 +11,8 @@ const WINDOW_WIDTH: u32 = COLUMNS * SQUARE_SIZE_PX + 2 * MARGIN_SIDES_PX;
 const WINDOW_HEIGHT: u32 = ROWS * SQUARE_SIZE_PX + 2 * MARGIN_TOP_BOTTOM_PX;
 const SQUARE_LINE_WIDTH_RATIO: f32 = 0.075; // In relation to square size
 
+const MAX_RNG_SEED_VAL: u64 = 100_000_000;
+
 struct Model {
     random_seed: u64,
 }
@@ -21,10 +23,12 @@ fn model(app: &App) -> Model {
         .title(app.exe_name().unwrap())
         .size(WINDOW_WIDTH, WINDOW_HEIGHT)
         .view(view)
+        .key_pressed(key_pressed)
         .build()
         .unwrap();
 
-    let random_seed = random_range(0, 100_000_000);
+    let random_seed = random_range(0, MAX_RNG_SEED_VAL);
+    println!("Generated initial seed: {random_seed}");
     Model { random_seed }
 }
 
@@ -61,6 +65,17 @@ fn view(app: &App, model: &Model, frame: Frame) {
     }
 
     draw.to_frame(app, &frame).unwrap();
+}
+
+fn key_pressed(_app: &App, model: &mut Model, key: Key) {
+    match key {
+        Key::R => {
+            let new_seed = random_range(0, MAX_RNG_SEED_VAL);
+            model.random_seed = new_seed;
+            println!("R key pressed. Changing seed to: {new_seed}")
+        }
+        _other_key => {}
+    }
 }
 
 fn main() {
