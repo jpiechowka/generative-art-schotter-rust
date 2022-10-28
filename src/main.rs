@@ -1,6 +1,6 @@
 use nannou::prelude::*;
 
-const ROWS: u32 = 30;
+const ROWS: u32 = 25;
 const COLUMNS: u32 = 15;
 const SQUARE_SIZE_PX: u32 = 30;
 const MARGIN_TOP_BOTTOM_PX: u32 = 40;
@@ -25,14 +25,19 @@ fn view(app: &App, frame: Frame) {
 
     draw.background().color(SNOW);
 
-    grid_draw
-        .rect()
-        .no_fill()
-        .stroke(BLACK)
-        .stroke_weight(SQUARE_LINE_WIDTH_RATIO)
-        .w_h(1.0, 1.0)
-        .x_y(0.0, 0.0)
-        .rotate(0.0);
+    for y in 0..ROWS {
+        for x in 0..COLUMNS {
+            let cell_draw = grid_draw.x_y(x as f32, y as f32);
+            cell_draw
+                .rect()
+                .no_fill()
+                .stroke(BLACK)
+                .stroke_weight(SQUARE_LINE_WIDTH_RATIO)
+                .w_h(1.0, 1.0)
+                .x_y(0.0, 0.0)
+                .rotate(0.0);
+        }
+    }
 
     draw.to_frame(app, &frame).unwrap();
 }
