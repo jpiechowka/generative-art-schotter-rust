@@ -27,6 +27,11 @@ fn view(app: &App, frame: Frame) {
 
     for y in 0..ROWS {
         for x in 0..COLUMNS {
+            let factor = y as f32 / ROWS as f32;
+            let x_offset = factor * random_range(-0.5, 0.5);
+            let y_offset = factor * random_range(-0.5, 0.5);
+            let rotation = factor * random_range(-PI / 4.0, PI / 4.0); // 45 degrees
+
             let cell_draw = grid_draw.x_y(x as f32, y as f32);
             cell_draw
                 .rect()
@@ -34,8 +39,8 @@ fn view(app: &App, frame: Frame) {
                 .stroke(BLACK)
                 .stroke_weight(SQUARE_LINE_WIDTH_RATIO)
                 .w_h(1.0, 1.0)
-                .x_y(0.0, 0.0)
-                .rotate(0.0);
+                .x_y(x_offset, y_offset)
+                .rotate(rotation);
         }
     }
 
