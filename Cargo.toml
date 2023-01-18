@@ -2,8 +2,9 @@
 name = "generative-art-schotter-rust"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["Janusz Piechówka"]
+repository = "https://github.com/jpiechowka/generative-art-schotter-rust"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
 nannou = "0.18.1"
